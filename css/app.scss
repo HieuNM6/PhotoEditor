@@ -9,11 +9,6 @@
     margin-bottom: 0;
 }
 
-canvas {
-  width: 100%;
-  height: auto;
-}
-
 #marketing {
     padding-top: 60px;
     .col-lg-4 {
@@ -72,3 +67,9 @@ canvas {
 }
 
 /* EXAMPLE CSS ENDS */
+
+canvas {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
