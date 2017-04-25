@@ -5,7 +5,7 @@ import 'waypoints';
 import 'scrollTo';
 import {fabric} from "fabric";
 
-let imageExportPosition = {};
+let imgExportPosition = {};
 window.canvas = new fabric.Canvas("canvas");
 var edgedetection = 8;
 canvas.selection = false;
@@ -29,10 +29,10 @@ $('#exportBtn').on('click', saveImg);
 
 function saveImg() {
   window.open(canvas.toDataURL({
-    left: imageExportPosition.left,
-    top: imageExportPosition.top,
-    width: imageExportPosition.width,
-    height: imageExportPosition.height
+    left: imgExportPosition.left,
+    top: imgExportPosition.top,
+    width: imgExportPosition.width,
+    height: imgExportPosition.height
   }));
 }
 
@@ -92,19 +92,19 @@ function init(top, left, width, height, fill) {
 
   // Set load image to canvas
   fabric.Image.fromURL("images/input.jpg", (img) => {
-    img.center();
+    img.scaleToHeight(canvas.height * 0.6);
+    img.scaleToWidth(canvas.width * 0.6);
+
     window.canvas.add(img);
     window.canvas.moveTo(img, 0);
     window.canvas.centerObject(img);
     window.canvas.renderAll();
 
-    console.log(canvas.height);
-
     //Set position to export Image position
-    imageExportPosition = ['height', 'left', 'top', 'width'].reduce((result, key) => {
-      result[key] = img[key];
-      return result;
-    }, {});
+    imgExportPosition.height = img.getHeight();
+    imgExportPosition.width = img.getWidth();
+    imgExportPosition.top = img.top;
+    imgExportPosition.left = img.left;
   }, {selectable: false});
 
   window.canvas.add(bg);
