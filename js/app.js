@@ -5,12 +5,7 @@ import 'waypoints';
 import 'scrollTo';
 import {fabric} from "fabric";
 
-let imagePosition = {
-  left: 0,
-  top: 0,
-  width: 0,
-  height: 0
-}
+let imageExportPosition = {};
 window.canvas = new fabric.Canvas("canvas");
 var edgedetection = 8;
 canvas.selection = false;
@@ -29,14 +24,15 @@ resizeCanvas();
 // Initialize Everything
 init();
 
+// Add event to exportBtn
 $('#exportBtn').on('click', saveImg);
 
 function saveImg() {
   window.open(canvas.toDataURL({
-    left: imagePosition.left,
-    top: imagePosition.top,
-    width: imagePosition.width,
-    height: imagePosition.height
+    left: imageExportPosition.left,
+    top: imageExportPosition.top,
+    width: imageExportPosition.width,
+    height: imageExportPosition.height
   }));
 }
 
@@ -94,30 +90,23 @@ function init(top, left, width, height, fill) {
       strokeShadow: true
   };
 
-  var squareScreen = new fabric.Rect({
-      top: 100,
-      left: 100,
-      width: 400,
-      height: 400,
-      fill : '#f55',
-      lockRotation: true,
-      originX: 'left',
-      originY: 'top',
-      cornerSize: 15,
-      hasRotatingPoint: false,
-      perPixelTargetFind: true,
-      stroke: 'black',
-      strokeWidth: 1,
-      selectable: false
-  });
+  // Set load image to canvas
+  fabric.Image.fromURL("images/input.jpg", (img) => {
+    img.center();
+    window.canvas.add(img);
+    window.canvas.moveTo(img, 0);
+    window.canvas.centerObject(img);
+    window.canvas.renderAll();
 
+    console.log(canvas.height);
 
-  imagePosition.height = squareScreen.height;
-  imagePosition.left = squareScreen.left;
-  imagePosition.top = squareScreen.top;
-  imagePosition.width = squareScreen.width;
+    //Set position to export Image position
+    imageExportPosition = ['height', 'left', 'top', 'width'].reduce((result, key) => {
+      result[key] = img[key];
+      return result;
+    }, {});
+  }, {selectable: false});
 
-  window.canvas.add(squareScreen);
   window.canvas.add(bg);
   bg.setShadow(shadow);
   window.canvas.add(squareBtn);
